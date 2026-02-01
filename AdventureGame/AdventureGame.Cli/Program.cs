@@ -5,7 +5,10 @@ namespace AdventureGame.Cli
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Maze maze = new Maze();
+            maze.GenerateMaze();
+            maze.PrintMaze();
+
         }
     }
 }

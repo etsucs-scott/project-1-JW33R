@@ -1,7 +1,6 @@
 ﻿namespace AdventureGame.Core
 {
-    public class Class1
+    internal class ICharacter
     {
-
     }
 }
