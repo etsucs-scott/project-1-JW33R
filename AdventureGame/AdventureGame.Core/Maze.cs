@@ -22,6 +22,7 @@ namespace AdventureGame.Core
                 maze[i, maze.GetLength(0) - 1] = "#";
                 maze[maze.GetLength(0) - 1, i] = "#";
             }
+            maze[2, 2] = "@";
             AddMonster();
             AddWeapon();
             AddPotion();
@@ -104,6 +105,33 @@ namespace AdventureGame.Core
                 }
                Console.WriteLine();
             }
+        }
+
+        public string[,] MovePlayer(ConsoleKeyInfo x)
+        {
+            if (x.Key == ConsoleKey.D || x.Key == ConsoleKey.RightArrow)
+            {
+                foreach (var item in maze)
+                {
+                    if (item == "@")
+                    {
+                        
+                    }
+                }
+            }
+            else if (x.Key == ConsoleKey.A || x.Key == ConsoleKey.LeftArrow)
+            {
+                Console.WriteLine("Move Left");
+            }
+            else if (x.Key == ConsoleKey.S || x.Key == ConsoleKey.DownArrow)
+            {
+                Console.WriteLine("Move Down");
+            }
+            else if (x.Key == ConsoleKey.W || x.Key == ConsoleKey.UpArrow)
+            {
+                Console.WriteLine("Move Up");
+            }
+            return maze;
         }
         
 

@@ -8,7 +8,8 @@ namespace AdventureGame.Cli
             Maze maze = new Maze();
             maze.GenerateMaze();
             maze.PrintMaze();
-
+            var movement = Console.ReadKey();
+            maze.MovePlayer(movement);
         }
     }
 }
