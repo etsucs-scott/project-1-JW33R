@@ -9,6 +9,7 @@ namespace AdventureGame.Core
     public class Maze
     {
         public string[,] maze = new string[10, 10];
+        Weapon weapon = new();
         public string[,] GenerateMaze()
         {
             int x, y;
@@ -22,11 +23,13 @@ namespace AdventureGame.Core
                 maze[i, maze.GetLength(0) - 1] = "#";
                 maze[maze.GetLength(0) - 1, i] = "#";
             }
-            maze[2, 2] = "@";
             AddMonster();
             AddWeapon();
             AddPotion();
+            AddWalls();
             AddBlankSpace();
+            maze[maze.GetLength(0) - 2, maze.GetLength(0) - 2] = "E";   
+            maze[2, 2] = "@";
             return maze;
         }
 
@@ -62,6 +65,23 @@ namespace AdventureGame.Core
             return maze;
         }
 
+        public string[,] AddWalls()
+        {
+            Random random = new Random();
+            int x, y;
+            int spawnRate = random.Next(1, 10);
+            for (int i = 0; i < spawnRate; i++)
+            {
+                x = random.Next(0, maze.GetLength(0) - 1);
+                y = random.Next(0, maze.GetLength(0) - 1);
+                if (maze[x, y] == null)
+                {
+                    maze[x, y] = "#";
+                }
+
+            }
+            return maze;
+        }
         public string[,] AddWeapon()
         {
             Random random = new Random();
@@ -107,29 +127,119 @@ namespace AdventureGame.Core
             }
         }
 
+        public bool CheckWeapon()
+        {
+            for (int i = 0; i < maze.GetLength(0); i++)
+            {
+                for (int j = 0; j < maze.GetLength(0); j++)
+                {
+                    if (maze[i, j] == "W")
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         public string[,] MovePlayer(ConsoleKeyInfo x)
         {
+            if (CheckWeapon())
+            {
+                weapon.ModifyDamage();
+            }
             if (x.Key == ConsoleKey.D || x.Key == ConsoleKey.RightArrow)
             {
-                foreach (var item in maze)
+                for (int i = 0; i < maze.GetLength(0); i++)
                 {
-                    if (item == "@")
+                    for (int j = 0; j < maze.GetLength(0); j++)
                     {
-                        
+                        if (maze[i, j] == "@")
+                        {
+                            if (maze[i, j + 1] == "#")
+                            {
+                                Console.WriteLine("You hit a wall!");
+                                continue;
+                            }
+                            else
+                            {
+                                maze[i, j] = ".";
+                                j += 1;
+                                maze[i, j] = "@";
+                            }
+                        }
                     }
                 }
             }
             else if (x.Key == ConsoleKey.A || x.Key == ConsoleKey.LeftArrow)
             {
-                Console.WriteLine("Move Left");
+                for (int i = 0; i < maze.GetLength(0); i++)
+                {
+                    for (int j = 0; j < maze.GetLength(0); j++)
+                    {
+                        if (maze[i, j] == "@")
+                        {
+                            if (maze[i, j - 1] == "#")
+                            {
+                                Console.WriteLine("You hit a wall!");
+                                continue;
+                            }
+                            else
+                            {
+                                maze[i, j] = ".";
+                                j -= 1;
+                                maze[i, j] = "@";
+                            }
+                            
+                        }
+                    }
+                }
             }
             else if (x.Key == ConsoleKey.S || x.Key == ConsoleKey.DownArrow)
             {
-                Console.WriteLine("Move Down");
+                for (int i = 0; i < maze.GetLength(0); i++)
+                {
+                    for (int j = 0; j < maze.GetLength(0); j++)
+                    {
+                        if (maze[i, j] == "@")
+                        {
+                            if (maze[i + 1, j] == "#")
+                            {
+                                Console.WriteLine("You hit a wall!");
+                                continue;
+                            }
+                            else
+                            {
+                                maze[i, j] = ".";
+                                i += 1;
+                                maze[i, j] = "@";
+                            }
+                           
+                        }
+                    }
+                }
             }
             else if (x.Key == ConsoleKey.W || x.Key == ConsoleKey.UpArrow)
             {
-                Console.WriteLine("Move Up");
+                for (int i = 0; i < maze.GetLength(0); i++)
+                {
+                    for (int j = 0; j < maze.GetLength(0); j++)
+                    {
+                        if (maze[i, j] == "@")
+                        {
+                            if (maze[i - 1, j] == "#")
+                            {
+                                Console.WriteLine("You hit a wall!");
+                                continue;
+                            }
+                            else
+                            {
+                                maze[i, j] = ".";
+                                i -= 1;
+                                maze[i, j] = "@";
+                            }
+                        }
+                    }
+                }
             }
             return maze;
         }

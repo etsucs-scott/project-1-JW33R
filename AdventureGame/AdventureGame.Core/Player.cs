@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace AdventureGame.Core
 {
-    internal class Player
+    public class Player
     {
-        int health = 100;
-        int maxHealth = 150;
-        int damage = 10;
+        public List<int> inventory = new();
+        public int health = 100;
+        public int maxHealth = 150;
+        public int damage = 10;
     }
 }
