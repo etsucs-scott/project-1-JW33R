@@ -5,9 +5,9 @@ namespace AdventureGame.Cli
     {
         static void Main(string[] args)
         {
-            Player player = new();
             Maze maze = new();
             Weapon weapon = new();
+            Player player = new();
             maze.GenerateMaze();
             bool alive = true;
             maze.PrintMaze();
@@ -18,7 +18,7 @@ namespace AdventureGame.Cli
                 maze.MovePlayer(movement);
                 Console.Clear();
                 maze.PrintMaze();
-                Console.WriteLine($"Damage: {player.damage}");
+                Console.WriteLine($"Damage: {weapon.GetDamage()}");
             }
         }
     }

@@ -10,7 +10,7 @@ namespace AdventureGame.Core
     {
         public string[,] maze = new string[10, 10];
         Weapon weapon = new();
-        public string[,] GenerateMaze()
+        public void GenerateMaze()
         {
             int x, y;
             Random random = new Random();
@@ -30,10 +30,9 @@ namespace AdventureGame.Core
             AddBlankSpace();
             maze[maze.GetLength(0) - 2, maze.GetLength(0) - 2] = "E";   
             maze[2, 2] = "@";
-            return maze;
         }
 
-        public string[,] AddBlankSpace()
+        public void AddBlankSpace()
         {
             for (int i = 0; i < maze.GetLength(0); i++)
             {
@@ -45,13 +44,12 @@ namespace AdventureGame.Core
                     }
                 }
             }
-            return maze;
         }
-        public string[,] AddMonster()
+        public void AddMonster()
         {
             Random random = new Random();
             int x, y;
-            int spawnRate = random.Next(1, 10);
+            int spawnRate = random.Next(7, 10);
             for (int i = 0; i < spawnRate; i++)
             {
                 x = random.Next(0, maze.GetLength(0) - 1);
@@ -62,14 +60,13 @@ namespace AdventureGame.Core
                 }
                 
             }
-            return maze;
         }
 
-        public string[,] AddWalls()
+        public void AddWalls()
         {
             Random random = new Random();
             int x, y;
-            int spawnRate = random.Next(1, 10);
+            int spawnRate = random.Next(7, 10);
             for (int i = 0; i < spawnRate; i++)
             {
                 x = random.Next(0, maze.GetLength(0) - 1);
@@ -80,13 +77,12 @@ namespace AdventureGame.Core
                 }
 
             }
-            return maze;
         }
-        public string[,] AddWeapon()
+        public void AddWeapon()
         {
             Random random = new Random();
             int x, y;
-            int spawnRate = random.Next(1, 10);
+            int spawnRate = random.Next(7, 10);
             for (int i = 0; i < spawnRate; i++)
             {
                 x = random.Next(0, maze.GetLength(0) - 1);
@@ -96,14 +92,13 @@ namespace AdventureGame.Core
                     maze[x, y] = "W";
                 }
             }
-            return maze;
         }
 
-        public string[,] AddPotion()
+        public void AddPotion()
         {
             Random random = new Random();
             int x, y;
-            int spawnRate = random.Next(3, 10);
+            int spawnRate = random.Next(7, 10);
             for (int i = 0; i < spawnRate; i++)
             {
                 x = random.Next(0, maze.GetLength(0) - 1);
@@ -113,7 +108,6 @@ namespace AdventureGame.Core
                     maze[x, y] = "P";
                 }
             }
-            return maze;
         }
         public void PrintMaze()
         {
@@ -127,26 +121,24 @@ namespace AdventureGame.Core
             }
         }
 
-        public bool CheckWeapon()
+        public bool CheckWeapon(int i, int j)
         {
-            for (int i = 0; i < maze.GetLength(0); i++)
+            if (maze[i, j] == "W")
             {
-                for (int j = 0; j < maze.GetLength(0); j++)
-                {
-                    if (maze[i, j] == "W")
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
             return false;
         }
-        public string[,] MovePlayer(ConsoleKeyInfo x)
+
+        public void CheckConditions(int i, int j)
         {
-            if (CheckWeapon())
+            if (CheckWeapon(i, j))
             {
                 weapon.ModifyDamage();
             }
+        }
+        public void MovePlayer(ConsoleKeyInfo x)
+        {
             if (x.Key == ConsoleKey.D || x.Key == ConsoleKey.RightArrow)
             {
                 for (int i = 0; i < maze.GetLength(0); i++)
@@ -162,6 +154,7 @@ namespace AdventureGame.Core
                             }
                             else
                             {
+                                CheckConditions(i, j + 1);
                                 maze[i, j] = ".";
                                 j += 1;
                                 maze[i, j] = "@";
@@ -185,6 +178,7 @@ namespace AdventureGame.Core
                             }
                             else
                             {
+                                CheckConditions(i, j - 1);
                                 maze[i, j] = ".";
                                 j -= 1;
                                 maze[i, j] = "@";
@@ -209,6 +203,7 @@ namespace AdventureGame.Core
                             }
                             else
                             {
+                                CheckConditions(i + 1, j);
                                 maze[i, j] = ".";
                                 i += 1;
                                 maze[i, j] = "@";
@@ -233,6 +228,7 @@ namespace AdventureGame.Core
                             }
                             else
                             {
+                                CheckConditions(i - 1, j);
                                 maze[i, j] = ".";
                                 i -= 1;
                                 maze[i, j] = "@";
@@ -241,7 +237,6 @@ namespace AdventureGame.Core
                     }
                 }
             }
-            return maze;
         }
         
 

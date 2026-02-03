@@ -18,19 +18,21 @@ namespace AdventureGame.Core
             Random random = new Random();
             int modifierIndex = random.Next(weaponModifiers.Count);
             int modifier = weaponModifiers.ElementAt(modifierIndex).Value;
+            player.inventory.Add(modifier);
             foreach (var item in player.inventory)
             {
-                if (item != modifier)
+                if (player.damage > modifier)
                 {
-                    player.inventory.Add(modifier);
+                    break;
                 }
-                if (item > modifier)
+                else if (item > player.damage)
                 {
-                    player.damage = modifier;
+                    player.damage = item;
                 }
             }
-            player.damage += modifier;
+            Console.WriteLine(player.damage);
+            Console.ReadLine();
         }
-     
+
     }
 }
