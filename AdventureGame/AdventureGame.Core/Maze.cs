@@ -10,6 +10,15 @@ namespace AdventureGame.Core
     {
         public string[,] maze = new string[10, 10];
         Weapon weapon = new();
+        Potion potion = new();
+        public bool gameWin = false;
+        public bool alive = true;
+
+        public void ConsoleSpecs()
+        {
+            Console.Title = "Adventure Game";
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+        }
         public void GenerateMaze()
         {
             int x, y;
@@ -66,11 +75,11 @@ namespace AdventureGame.Core
         {
             Random random = new Random();
             int x, y;
-            int spawnRate = random.Next(7, 10);
+            int spawnRate = random.Next(10, 20);
             for (int i = 0; i < spawnRate; i++)
             {
-                x = random.Next(0, maze.GetLength(0) - 1);
-                y = random.Next(0, maze.GetLength(0) - 1);
+                x = random.Next(0, maze.GetLength(0) - 4);
+                y = random.Next(0, maze.GetLength(0) - 4);
                 if (maze[x, y] == null)
                 {
                     maze[x, y] = "#";
@@ -115,7 +124,7 @@ namespace AdventureGame.Core
             {
                 for (int j = 0; j < maze.GetLength(0); j++)
                 {
-                    Console.Write($"[{maze[i, j]}]");
+                    Console.Write($"{maze[i, j]}");
                 }
                Console.WriteLine();
             }
@@ -130,11 +139,60 @@ namespace AdventureGame.Core
             return false;
         }
 
+        public bool CheckMonster(int i, int j) 
+        {
+            if (maze[i, j] == "M") 
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool CheckPotion(int i, int j)
+        {
+            if (maze[i, j] == "P")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool CheckExit(int i, int j)
+        {
+            if (maze[i, j] == "E")
+            {
+                return true;
+            }
+            return false;
+        }
+
         public void CheckConditions(int i, int j)
         {
             if (CheckWeapon(i, j))
             {
                 weapon.ModifyDamage();
+            }
+            else if (CheckMonster(i, j))
+            {
+                //Logic for combat goes here
+                Console.WriteLine("You encountered a monster!");
+                Console.ReadLine();
+            }
+            else if (CheckPotion(i, j)) 
+            {
+                Console.WriteLine("You found a health potion!");
+                Console.ReadLine();
+                potion.Heal();
+
+                //Logic for health potion goes here
+            }
+            else if (CheckExit(i, j))
+            {
+                Console.WriteLine("You found the exit! You win!");
+                Console.ReadLine();
+                gameWin = true;
+                alive = false;
+                //Logic for winning the game goes here
             }
         }
         public void MovePlayer(ConsoleKeyInfo x)

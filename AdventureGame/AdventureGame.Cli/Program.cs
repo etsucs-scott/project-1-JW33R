@@ -8,17 +8,20 @@ namespace AdventureGame.Cli
             Maze maze = new();
             Weapon weapon = new();
             Player player = new();
-            maze.GenerateMaze();
-            bool alive = true;
-            maze.PrintMaze();
+            maze.ConsoleSpecs();
+            Console.WriteLine("Press any key to start the game...");
             var movement = Console.ReadKey();
-            while (alive) 
+            Console.Clear();
+            maze.GenerateMaze();
+            maze.PrintMaze();
+            while (maze.alive) 
             {
                 movement = Console.ReadKey();
+                Console.Clear();
                 maze.MovePlayer(movement);
                 Console.Clear();
                 maze.PrintMaze();
-                Console.WriteLine($"Damage: {weapon.GetDamage()}");
+                //Console.WriteLine($"Damage: {weapon.GetDamage()}");
             }
         }
     }
