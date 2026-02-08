@@ -6,21 +6,10 @@ using System.Threading.Tasks;
 
 namespace AdventureGame.Core
 {
-    internal class Potion
+    public class Potion : Item
     {
-        int heal = 20;
-        public int Heal()
-        {
-            return heal;
-        }
+        public int Heal { get; private set; } = 20;
 
-        public void Heal(Player player)
-        {
-            player.health += heal;
-            if (player.health > player.maxHealth)
-            {
-                player.health = player.maxHealth;
-            }
-        }
+
     }
 }

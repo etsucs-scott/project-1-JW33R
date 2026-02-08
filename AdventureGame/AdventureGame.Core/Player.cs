@@ -6,12 +6,47 @@ using System.Threading.Tasks;
 
 namespace AdventureGame.Core
 {
-    public class Player
+    public class Player : ICharacter
     {
 
-        public List<int> inventory = new();
-        public int health = 100;
-        public int maxHealth = 150;
-        public int damage = 10;
+        public List<int> Inventory { get; private set; }
+        public int Health { get; private set; }
+        public int MaxHealth { get; private set; }
+        public int Damage { get; private set; } 
+
+        public Monster Monster { get; private set; }
+
+        public Player()
+        {
+            Health = 100;
+            MaxHealth = 150;
+            Damage = 10;
+            Inventory = [10];
+            Monster = new();
+        }
+
+        public void DamageChange(int newDamage)
+        {
+            Damage = newDamage;
+        }
+
+        public void HealthUp(int heal) 
+        { 
+            Health += heal;
+            if (Health > MaxHealth)
+            {
+                Health = MaxHealth;
+            }
+        }
+        public void TakeDamage(int damage)
+        {
+            Health -= damage;
+        }
+
+        public void Attack(int damage)
+        {
+            Monster.TakeDamage(damage);
+        }
     }
+
 }

@@ -1,6 +1,8 @@
 ﻿namespace AdventureGame.Core
 {
-    internal class ICharacter
+    public interface ICharacter
     {
+        public void TakeDamage(int damage);
+        public void Attack(int damage);
     }
 }

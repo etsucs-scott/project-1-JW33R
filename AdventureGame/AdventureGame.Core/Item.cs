@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace AdventureGame.Core
 {
-    internal class Item
+    public abstract class Item
     {
+
     }
 }

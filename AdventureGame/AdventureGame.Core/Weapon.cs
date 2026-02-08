@@ -5,32 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 namespace AdventureGame.Core
 {
-    public class Weapon
+    public class Weapon : Item
     {
         Player player = new();
-        public Dictionary<string, int> weaponModifiers = new()
-        {
-            {"Godly", 30 }, {"Weak", -5 }, {"Strong", 5 }, {"Hurtful", 10 }, {"Slow", -2 }, {"Amazing", 15 }, {"Cool", 7 }, {"Not Cool", -7}
-        };
-
+        public string[] weaponNames = new string[8] {"Sword", "Axe", "Bow", "Dagger", "Mace", "Spear", "Hammer", "Staff"};
+        public int[] weaponDamage = new int[8] {17, 20, 12, 11, 18, 20, 22, 25};
         public void ModifyDamage()
         {
             Random random = new Random();
-            int modifierIndex = random.Next(weaponModifiers.Count);
-            int modifier = weaponModifiers.ElementAt(modifierIndex).Value;
-            player.inventory.Add(modifier);
-            foreach (var item in player.inventory)
+            int modifierIndex = random.Next(weaponNames.Length);
+            int modifier = weaponDamage[modifierIndex];
+            player.Inventory.Add(modifier);
+            foreach (var item in player.Inventory)
             {
-                if (player.damage > modifier)
+                if (player.Damage > modifier)
                 {
                     break;
                 }
-                else if (item > player.damage)
+                else if (item > player.Damage)
                 {
-                    player.damage = item;
+                    player.DamageChange(item);
                 }
             }
-            Console.WriteLine(player.damage);
+            Console.WriteLine(player.Damage);
             Console.ReadLine();
         }
 

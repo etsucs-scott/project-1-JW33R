@@ -6,9 +6,25 @@ using System.Threading.Tasks;
 
 namespace AdventureGame.Core
 {
-    internal class Monster
+    public class Monster : ICharacter
     {
-        int health = 30;
-        int damage = 10;
+        public int Health { get; private set; }
+        public int Damage { get; private set; } = 10;
+
+        public Player Player { get; private set; }
+        public Monster() 
+        {
+            //Player = new Player();
+        }
+
+        public void TakeDamage(int damage)
+        {  
+            Health -= damage;
+        }
+
+        public void Attack(int damage)
+        {
+            Player.TakeDamage(damage);
+        }
     }
 }

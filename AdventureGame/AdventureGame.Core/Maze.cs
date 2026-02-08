@@ -8,48 +8,54 @@ namespace AdventureGame.Core
 {
     public class Maze
     {
-        public string[,] maze = new string[10, 10];
-        Weapon weapon = new();
-        Potion potion = new();
-        public bool gameWin = false;
-        public bool alive = true;
+        public string[,] MazeArray { get; private set; }
+        public bool GameWin { get; private set; } = false;
+        public bool Alive { get; private set;} = true;
+        public Weapon Weapon { get; private set; }
+        public Potion Potion { get; private set; }
+        public Player Player { get; private set; }
 
-        public void ConsoleSpecs()
+        public Monster Monster { get; private set; }
+        public Maze()
         {
-            Console.Title = "Adventure Game";
-            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            MazeArray = new string[10, 10];
+            Monster = new();
+            Weapon = new();
+            Potion = new();
+            Player = new();
         }
+
         public void GenerateMaze()
         {
             int x, y;
             Random random = new Random();
             x = random.Next(10, 20);
-            maze = new string[x, x];
-            for (int i = 0; i < maze.GetLength(0); i++)
+            MazeArray = new string[x, x];
+            for (int i = 0; i < MazeArray.GetLength(0); i++)
             {
-                maze[0, i] = "#";
-                maze[i, 0] = "#";
-                maze[i, maze.GetLength(0) - 1] = "#";
-                maze[maze.GetLength(0) - 1, i] = "#";
+                MazeArray[0, i] = "#";
+                MazeArray[i, 0] = "#";
+                MazeArray[i, MazeArray.GetLength(0) - 1] = "#";
+                MazeArray[MazeArray.GetLength(0) - 1, i] = "#";
             }
             AddMonster();
             AddWeapon();
             AddPotion();
             AddWalls();
             AddBlankSpace();
-            maze[maze.GetLength(0) - 2, maze.GetLength(0) - 2] = "E";   
-            maze[2, 2] = "@";
+            MazeArray[MazeArray.GetLength(0) - 2, MazeArray.GetLength(0) - 2] = "E";   
+            MazeArray[2, 2] = "@";
         }
 
         public void AddBlankSpace()
         {
-            for (int i = 0; i < maze.GetLength(0); i++)
+            for (int i = 0; i < MazeArray.GetLength(0); i++)
             {
-                for (int j = 0; j < maze.GetLength(0); j++)
+                for (int j = 0; j < MazeArray.GetLength(0); j++)
                 {
-                    if (maze[i, j] == null) 
+                    if (MazeArray[i, j] == null) 
                     {
-                        maze[i, j] = ".";
+                        MazeArray[i, j] = ".";
                     }
                 }
             }
@@ -61,11 +67,11 @@ namespace AdventureGame.Core
             int spawnRate = random.Next(7, 10);
             for (int i = 0; i < spawnRate; i++)
             {
-                x = random.Next(0, maze.GetLength(0) - 1);
-                y = random.Next(0, maze.GetLength(0) - 1);
-                if (maze[x, y] == null)
+                x = random.Next(0, MazeArray.GetLength(0) - 1);
+                y = random.Next(0, MazeArray.GetLength(0) - 1);
+                if (MazeArray[x, y] == null)
                 {
-                    maze[x, y] = "M";
+                    MazeArray[x, y] = "M";
                 }
                 
             }
@@ -78,11 +84,11 @@ namespace AdventureGame.Core
             int spawnRate = random.Next(10, 20);
             for (int i = 0; i < spawnRate; i++)
             {
-                x = random.Next(0, maze.GetLength(0) - 4);
-                y = random.Next(0, maze.GetLength(0) - 4);
-                if (maze[x, y] == null)
+                x = random.Next(0, MazeArray.GetLength(0) - 4);
+                y = random.Next(0, MazeArray.GetLength(0) - 4);
+                if (MazeArray[x, y] == null)
                 {
-                    maze[x, y] = "#";
+                    MazeArray[x, y] = "#";
                 }
 
             }
@@ -94,11 +100,11 @@ namespace AdventureGame.Core
             int spawnRate = random.Next(7, 10);
             for (int i = 0; i < spawnRate; i++)
             {
-                x = random.Next(0, maze.GetLength(0) - 1);
-                y = random.Next(0, maze.GetLength(0) - 1);
-                if (maze[x, y] == null)
+                x = random.Next(0, MazeArray.GetLength(0) - 1);
+                y = random.Next(0, MazeArray.GetLength(0) - 1);
+                if (MazeArray[x, y] == null)
                 {
-                    maze[x, y] = "W";
+                    MazeArray[x, y] = "W";
                 }
             }
         }
@@ -110,21 +116,21 @@ namespace AdventureGame.Core
             int spawnRate = random.Next(7, 10);
             for (int i = 0; i < spawnRate; i++)
             {
-                x = random.Next(0, maze.GetLength(0) - 1);
-                y = random.Next(0, maze.GetLength(0) - 1);
-                if (maze[x, y] == null)
+                x = random.Next(0, MazeArray.GetLength(0) - 1);
+                y = random.Next(0, MazeArray.GetLength(0) - 1);
+                if (MazeArray[x, y] == null)
                 {
-                    maze[x, y] = "P";
+                    MazeArray[x, y] = "P";
                 }
             }
         }
         public void PrintMaze()
         {
-            for (int i = 0; i < maze.GetLength(0); i++)
+            for (int i = 0; i < MazeArray.GetLength(0); i++)
             {
-                for (int j = 0; j < maze.GetLength(0); j++)
+                for (int j = 0; j < MazeArray.GetLength(0); j++)
                 {
-                    Console.Write($"{maze[i, j]}");
+                    Console.Write($"{MazeArray[i, j]}");
                 }
                Console.WriteLine();
             }
@@ -132,7 +138,7 @@ namespace AdventureGame.Core
 
         public bool CheckWeapon(int i, int j)
         {
-            if (maze[i, j] == "W")
+            if (MazeArray[i, j] == "W")
             {
                 return true;
             }
@@ -141,7 +147,7 @@ namespace AdventureGame.Core
 
         public bool CheckMonster(int i, int j) 
         {
-            if (maze[i, j] == "M") 
+            if (MazeArray[i, j] == "M") 
             {
                 return true;
             }
@@ -150,7 +156,7 @@ namespace AdventureGame.Core
 
         public bool CheckPotion(int i, int j)
         {
-            if (maze[i, j] == "P")
+            if (MazeArray[i, j] == "P")
             {
                 return true;
             }
@@ -159,7 +165,7 @@ namespace AdventureGame.Core
 
         public bool CheckExit(int i, int j)
         {
-            if (maze[i, j] == "E")
+            if (MazeArray[i, j] == "E")
             {
                 return true;
             }
@@ -170,19 +176,39 @@ namespace AdventureGame.Core
         {
             if (CheckWeapon(i, j))
             {
-                weapon.ModifyDamage();
+                Weapon.ModifyDamage();
             }
             else if (CheckMonster(i, j))
             {
                 //Logic for combat goes here
                 Console.WriteLine("You encountered a monster!");
                 Console.ReadLine();
+                while (Player.Health > 0 && Monster.Health > 0) 
+                {
+                    Player.Attack(Player.Damage);
+                    Monster.Attack(Monster.Damage);
+                    Console.WriteLine($"Your health: {Player.Health}");
+                    Console.ReadLine();
+                    if (Player.Health <= 0)
+                    {
+                        Console.WriteLine("You were defeated by the monster! Game over.");
+                        Console.ReadLine();
+                        Alive = false;
+                        break;
+                    }
+                    else if (Monster.Health <= 0)
+                    {
+                        Console.WriteLine("You defeated the monster!");
+                        Console.ReadLine();
+                        break;
+                    }
+                }
             }
             else if (CheckPotion(i, j)) 
             {
                 Console.WriteLine("You found a health potion!");
                 Console.ReadLine();
-                potion.Heal();
+                Player.HealthUp(Potion.Heal);
 
                 //Logic for health potion goes here
             }
@@ -190,8 +216,8 @@ namespace AdventureGame.Core
             {
                 Console.WriteLine("You found the exit! You win!");
                 Console.ReadLine();
-                gameWin = true;
-                alive = false;
+                GameWin = true;
+                Alive = false;
                 //Logic for winning the game goes here
             }
         }
@@ -199,13 +225,13 @@ namespace AdventureGame.Core
         {
             if (x.Key == ConsoleKey.D || x.Key == ConsoleKey.RightArrow)
             {
-                for (int i = 0; i < maze.GetLength(0); i++)
+                for (int i = 0; i < MazeArray.GetLength(0); i++)
                 {
-                    for (int j = 0; j < maze.GetLength(0); j++)
+                    for (int j = 0; j < MazeArray.GetLength(0); j++)
                     {
-                        if (maze[i, j] == "@")
+                        if (MazeArray[i, j] == "@")
                         {
-                            if (maze[i, j + 1] == "#")
+                            if (MazeArray[i, j + 1] == "#")
                             {
                                 Console.WriteLine("You hit a wall!");
                                 continue;
@@ -213,9 +239,9 @@ namespace AdventureGame.Core
                             else
                             {
                                 CheckConditions(i, j + 1);
-                                maze[i, j] = ".";
+                                MazeArray[i, j] = ".";
                                 j += 1;
-                                maze[i, j] = "@";
+                                MazeArray[i, j] = "@";
                             }
                         }
                     }
@@ -223,13 +249,13 @@ namespace AdventureGame.Core
             }
             else if (x.Key == ConsoleKey.A || x.Key == ConsoleKey.LeftArrow)
             {
-                for (int i = 0; i < maze.GetLength(0); i++)
+                for (int i = 0; i < MazeArray.GetLength(0); i++)
                 {
-                    for (int j = 0; j < maze.GetLength(0); j++)
+                    for (int j = 0; j < MazeArray.GetLength(0); j++)
                     {
-                        if (maze[i, j] == "@")
+                        if (MazeArray[i, j] == "@")
                         {
-                            if (maze[i, j - 1] == "#")
+                            if (MazeArray[i, j - 1] == "#")
                             {
                                 Console.WriteLine("You hit a wall!");
                                 continue;
@@ -237,9 +263,9 @@ namespace AdventureGame.Core
                             else
                             {
                                 CheckConditions(i, j - 1);
-                                maze[i, j] = ".";
+                                MazeArray[i, j] = ".";
                                 j -= 1;
-                                maze[i, j] = "@";
+                                MazeArray[i, j] = "@";
                             }
                             
                         }
@@ -248,13 +274,13 @@ namespace AdventureGame.Core
             }
             else if (x.Key == ConsoleKey.S || x.Key == ConsoleKey.DownArrow)
             {
-                for (int i = 0; i < maze.GetLength(0); i++)
+                for (int i = 0; i < MazeArray.GetLength(0); i++)
                 {
-                    for (int j = 0; j < maze.GetLength(0); j++)
+                    for (int j = 0; j < MazeArray.GetLength(0); j++)
                     {
-                        if (maze[i, j] == "@")
+                        if (MazeArray[i, j] == "@")
                         {
-                            if (maze[i + 1, j] == "#")
+                            if (MazeArray[i + 1, j] == "#")
                             {
                                 Console.WriteLine("You hit a wall!");
                                 continue;
@@ -262,9 +288,9 @@ namespace AdventureGame.Core
                             else
                             {
                                 CheckConditions(i + 1, j);
-                                maze[i, j] = ".";
+                                MazeArray[i, j] = ".";
                                 i += 1;
-                                maze[i, j] = "@";
+                                MazeArray[i, j] = "@";
                             }
                            
                         }
@@ -273,13 +299,13 @@ namespace AdventureGame.Core
             }
             else if (x.Key == ConsoleKey.W || x.Key == ConsoleKey.UpArrow)
             {
-                for (int i = 0; i < maze.GetLength(0); i++)
+                for (int i = 0; i < MazeArray.GetLength(0); i++)
                 {
-                    for (int j = 0; j < maze.GetLength(0); j++)
+                    for (int j = 0; j < MazeArray.GetLength(0); j++)
                     {
-                        if (maze[i, j] == "@")
+                        if (MazeArray[i, j] == "@")
                         {
-                            if (maze[i - 1, j] == "#")
+                            if (MazeArray[i - 1, j] == "#")
                             {
                                 Console.WriteLine("You hit a wall!");
                                 continue;
@@ -287,9 +313,9 @@ namespace AdventureGame.Core
                             else
                             {
                                 CheckConditions(i - 1, j);
-                                maze[i, j] = ".";
+                                MazeArray[i, j] = ".";
                                 i -= 1;
-                                maze[i, j] = "@";
+                                MazeArray[i, j] = "@";
                             }
                         }
                     }
