@@ -10,6 +10,5 @@ namespace AdventureGame.Core
     {
         public int Heal { get; private set; } = 20;
 
-
     }
 }

@@ -21,8 +21,7 @@ namespace AdventureGame.Core
             Health = 100;
             MaxHealth = 150;
             Damage = 10;
-            Inventory = [10];
-            Monster = new();
+            //Monster = new();
         }
 
         public void DamageChange(int newDamage)
