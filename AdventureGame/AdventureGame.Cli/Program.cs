@@ -6,7 +6,6 @@ namespace AdventureGame.Cli
         static void Main(string[] args)
         {
             Maze maze = new();
-            Weapon weapon = new();
             Player player = new();
             Console.Title = "Adventure Game";
             Console.BackgroundColor = ConsoleColor.DarkBlue;
@@ -22,7 +21,7 @@ namespace AdventureGame.Cli
                 maze.MovePlayer(movement);
                 Console.Clear();
                 maze.PrintMaze();
-                Console.WriteLine($"Health: {player.Health}");
+                Console.WriteLine($"Health: {maze.CheckPlayerHealth()}");
             }
         }
     }

@@ -9,19 +9,17 @@ namespace AdventureGame.Core
     public class Player : ICharacter
     {
 
-        public List<int> Inventory { get; private set; }
+        public List<object> Inventory { get; private set; }
         public int Health { get; private set; }
         public int MaxHealth { get; private set; }
         public int Damage { get; private set; } 
 
-        public Monster Monster { get; private set; }
-
         public Player()
         {
+            Inventory = new();
             Health = 100;
             MaxHealth = 150;
             Damage = 10;
-            //Monster = new();
         }
 
         public void DamageChange(int newDamage)
@@ -42,9 +40,9 @@ namespace AdventureGame.Core
             Health -= damage;
         }
 
-        public void Attack(int damage)
+        public void Attack(int damage, ICharacter character)
         {
-            Monster.TakeDamage(damage);
+            character.TakeDamage(damage);
         }
     }
 

@@ -11,13 +11,10 @@ namespace AdventureGame.Core
         public int Health { get; private set; }
         public int Damage { get; private set; }
 
-        public Player Player { get; private set; }
-
-        public Monster() 
+        public Monster(int health) 
         {
-            Player = new Player();
             Damage = 10;
-            Health = 30;
+            Health = health;
         }
 
         public void TakeDamage(int damage)
@@ -25,9 +22,14 @@ namespace AdventureGame.Core
             Health -= damage;
         }
 
-        public void Attack(int damage)
+        public void Attack(int damage, ICharacter character)
         {
-            Player.TakeDamage(damage);
+            character.TakeDamage(damage);
+        }
+
+        public override string ToString()
+        {
+            return "M";
         }
     }
 }

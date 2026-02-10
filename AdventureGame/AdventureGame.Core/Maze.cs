@@ -8,7 +8,7 @@ namespace AdventureGame.Core
 {
     public class Maze
     {
-        public string[,] MazeArray { get; private set; }
+        public object[,] MazeArray { get; private set; }
         public bool GameWin { get; private set; } = false;
         public bool Alive { get; private set;} = true;
         public Weapon Weapon { get; private set; }
@@ -18,9 +18,9 @@ namespace AdventureGame.Core
         public Monster Monster { get; private set; }
         public Maze()
         {
-            MazeArray = new string[10, 10];
-            Monster = new();
-            Weapon = new();
+            MazeArray = new object[10, 10];
+            Monster = new(40);
+            Weapon = new("Sword", 25);
             Potion = new();
             Player = new();
         }
@@ -30,7 +30,7 @@ namespace AdventureGame.Core
             int x, y;
             Random random = new Random();
             x = random.Next(10, 20);
-            MazeArray = new string[x, x];
+            MazeArray = new object[x, x];
             for (int i = 0; i < MazeArray.GetLength(0); i++)
             {
                 MazeArray[0, i] = "#";
@@ -53,7 +53,7 @@ namespace AdventureGame.Core
             {
                 for (int j = 0; j < MazeArray.GetLength(0); j++)
                 {
-                    if (MazeArray[i, j] == null) 
+                    if (MazeArray[i, j] == null)
                     {
                         MazeArray[i, j] = ".";
                     }
@@ -65,13 +65,17 @@ namespace AdventureGame.Core
             Random random = new Random();
             int x, y;
             int spawnRate = random.Next(7, 10);
+            int health = random.Next(30, 50);
+            Monster monster = new(health);
             for (int i = 0; i < spawnRate; i++)
             {
+                health = random.Next(30, 50);
+                monster = new(health);
                 x = random.Next(0, MazeArray.GetLength(0) - 1);
                 y = random.Next(0, MazeArray.GetLength(0) - 1);
                 if (MazeArray[x, y] == null)
                 {
-                    MazeArray[x, y] = "M";
+                    MazeArray[x, y] = monster;
                 }
                 
             }
@@ -84,8 +88,8 @@ namespace AdventureGame.Core
             int spawnRate = random.Next(10, 20);
             for (int i = 0; i < spawnRate; i++)
             {
-                x = random.Next(0, MazeArray.GetLength(0) - 4);
-                y = random.Next(0, MazeArray.GetLength(0) - 4);
+                x = random.Next(3, MazeArray.GetLength(0) - 4);
+                y = random.Next(3, MazeArray.GetLength(0) - 4);
                 if (MazeArray[x, y] == null)
                 {
                     MazeArray[x, y] = "#";
@@ -97,14 +101,18 @@ namespace AdventureGame.Core
         {
             Random random = new Random();
             int x, y;
-            int spawnRate = random.Next(7, 10);
-            for (int i = 0; i < spawnRate; i++)
+
+            Weapon Sword = new("Sword", 25);
+            Weapon Axe = new("Axe", 15);
+            Weapon Bow = new("Bow", 20);
+            Weapon Dagger = new("Dagger", 10);
+            for (int i = 0; i < 6; i++)
             {
                 x = random.Next(0, MazeArray.GetLength(0) - 1);
                 y = random.Next(0, MazeArray.GetLength(0) - 1);
                 if (MazeArray[x, y] == null)
                 {
-                    MazeArray[x, y] = "W";
+                    MazeArray[x, y] = Sword;
                 }
             }
         }
@@ -130,6 +138,8 @@ namespace AdventureGame.Core
             {
                 for (int j = 0; j < MazeArray.GetLength(0); j++)
                 {
+                    Monster.ToString();
+                    Weapon.ToString();
                     Console.Write($"{MazeArray[i, j]}");
                 }
                Console.WriteLine();
@@ -138,7 +148,7 @@ namespace AdventureGame.Core
 
         public bool CheckWeapon(int i, int j)
         {
-            if (MazeArray[i, j] == "W")
+            if (MazeArray[i, j].GetType() == Weapon.GetType())
             {
                 return true;
             }
@@ -147,7 +157,7 @@ namespace AdventureGame.Core
 
         public bool CheckMonster(int i, int j) 
         {
-            if (MazeArray[i, j] == "M") 
+            if (MazeArray[i, j].GetType() == Monster.GetType()) 
             {
                 return true;
             }
@@ -172,21 +182,32 @@ namespace AdventureGame.Core
             return false;
         }
 
+        public int CheckPlayerHealth()
+        {
+            return Player.Health;
+        }
         public void CheckConditions(int i, int j)
         {
             if (CheckWeapon(i, j))
             {
-                Weapon.ModifyDamage();
+                Console.WriteLine(Weapon.PickupMessage(((Weapon)MazeArray[i, j]).NameOfWeapon, ((Weapon)MazeArray[i, j]).Damage));
+                Console.ReadLine();
+                Player.Inventory.Add((Weapon)MazeArray[i, j]);
+                Player.DamageChange(((Weapon)MazeArray[i, j]).Damage);
             }
             else if (CheckMonster(i, j))
             {
                 //Logic for combat goes here
                 Console.WriteLine("You encountered a monster!");
                 Console.ReadLine();
+                Monster = (Monster)MazeArray[i, j];
+                
                 while (Player.Health > 0 && Monster.Health > 0) 
                 {
-                    Player.Attack(Player.Damage);
-                    Monster.Attack(Monster.Damage);
+                    Console.WriteLine($"Monster Health: {Monster.Health}");
+                    Console.ReadLine();
+                    Player.Attack(Player.Damage, Monster);
+                    Monster.Attack(Monster.Damage, Player);
                     Console.WriteLine($"Your health: {Player.Health}");
                     Console.ReadLine();
                     if (Player.Health <= 0)
@@ -206,11 +227,9 @@ namespace AdventureGame.Core
             }
             else if (CheckPotion(i, j)) 
             {
-                Console.WriteLine("You found a health potion!");
+                Console.WriteLine(Potion.PickupMessage("Potion", 20));
                 Console.ReadLine();
                 Player.HealthUp(Potion.Heal);
-
-                //Logic for health potion goes here
             }
             else if (CheckExit(i, j))
             {
@@ -322,7 +341,5 @@ namespace AdventureGame.Core
                 }
             }
         }
-        
-
     }
 }

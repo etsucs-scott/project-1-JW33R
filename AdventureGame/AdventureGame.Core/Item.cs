@@ -8,6 +8,8 @@ namespace AdventureGame.Core
 {
     public abstract class Item
     {
+        public abstract string PickupMessage(string x, int y);
 
+        public abstract string Name();
     }
 }
