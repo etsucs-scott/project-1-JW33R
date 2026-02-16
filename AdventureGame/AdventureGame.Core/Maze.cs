@@ -207,6 +207,7 @@ namespace AdventureGame.Core
             }
             else if (CheckMonster(i, j)) //Checks to see if monster was true and if it is does logic for combat 
             {
+                //Logic for combat goes here
                 Console.WriteLine("You encountered a monster!");
                 Console.ReadLine();
                 Monster = (Monster)MazeArray[i, j];
@@ -251,6 +252,7 @@ namespace AdventureGame.Core
                 Console.ReadLine();
                 GameWin = true;
                 Alive = false;
+                //Logic for winning the game goes here
             }
         }
         public void MovePlayer(ConsoleKeyInfo x) //Does all logic for moving the player 
