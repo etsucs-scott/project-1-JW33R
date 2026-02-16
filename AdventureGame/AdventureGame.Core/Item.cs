@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace AdventureGame.Core
 {
-    public abstract class Item
+    public abstract class Item //Base class for all items in the game
     {
         public abstract string PickupMessage(string x, int y);
 
-        public abstract string Name();
     }
 }

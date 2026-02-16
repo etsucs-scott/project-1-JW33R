@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdventureGame.Core
 {
-    public class Monster : ICharacter
+    public class Monster : ICharacter //Class used for the monster which tracks health and damage and takes in methods from ICharacter
     {
         public int Health { get; private set; }
         public int Damage { get; private set; }

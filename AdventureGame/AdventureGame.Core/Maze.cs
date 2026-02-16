@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdventureGame.Core
 {
-    public class Maze
+    public class Maze //This class is used to generate the maze, do logic for moving the player, and do battle logic
     {
         public object[,] MazeArray { get; private set; }
         public bool GameWin { get; private set; } = false;
@@ -25,7 +25,7 @@ namespace AdventureGame.Core
             Player = new();
         }
 
-        public void GenerateMaze()
+        public void GenerateMaze() //Used to generate all of the elements in the maze including walls, weapons, monsters, potions and the player
         {
             int x, y;
             Random random = new Random();
@@ -47,7 +47,7 @@ namespace AdventureGame.Core
             MazeArray[2, 2] = "@";
         }
 
-        public void AddBlankSpace()
+        public void AddBlankSpace() //Used to fill in the blank spaces where there is no other element
         {
             for (int i = 0; i < MazeArray.GetLength(0); i++)
             {
@@ -60,7 +60,7 @@ namespace AdventureGame.Core
                 }
             }
         }
-        public void AddMonster()
+        public void AddMonster() //Used to add monsters into the maze with the use of the random class to determine spawn rate and the different health of the monsters
         {
             Random random = new Random();
             int x, y;
@@ -81,7 +81,7 @@ namespace AdventureGame.Core
             }
         }
 
-        public void AddWalls()
+        public void AddWalls() //Used to add walls into maze
         {
             Random random = new Random();
             int x, y;
@@ -97,27 +97,28 @@ namespace AdventureGame.Core
 
             }
         }
-        public void AddWeapon()
+        public void AddWeapon() //Used to add different weapons into the maze
         {
             Random random = new Random();
-            int x, y;
-
-            Weapon Sword = new("Sword", 25);
-            Weapon Axe = new("Axe", 15);
-            Weapon Bow = new("Bow", 20);
-            Weapon Dagger = new("Dagger", 10);
+            Weapon[] weapons = new Weapon[4]
+            { 
+                new Weapon("Sword", 25), new Weapon("Axe", 15), new Weapon("Bow", 20), new Weapon("Dagger", 10) 
+            };
+            
+            int x, y, z;
             for (int i = 0; i < 6; i++)
             {
+                z = random.Next(0, weapons.Length);
                 x = random.Next(0, MazeArray.GetLength(0) - 1);
                 y = random.Next(0, MazeArray.GetLength(0) - 1);
                 if (MazeArray[x, y] == null)
                 {
-                    MazeArray[x, y] = Sword;
+                    MazeArray[x, y] = weapons[z];
                 }
             }
         }
 
-        public void AddPotion()
+        public void AddPotion() //Used to add potions into the maze
         {
             Random random = new Random();
             int x, y;
@@ -132,7 +133,7 @@ namespace AdventureGame.Core
                 }
             }
         }
-        public void PrintMaze()
+        public void PrintMaze() //Used to print the maze to the console, uses ToString for the Monster and Weapon classes because instances are stored in the maze instead of just a string
         {
             for (int i = 0; i < MazeArray.GetLength(0); i++)
             {
@@ -146,7 +147,7 @@ namespace AdventureGame.Core
             }
         }
 
-        public bool CheckWeapon(int i, int j)
+        public bool CheckWeapon(int i, int j) //Used to check if there is a weapon in the space the player is trying to move to
         {
             if (MazeArray[i, j].GetType() == Weapon.GetType())
             {
@@ -155,7 +156,7 @@ namespace AdventureGame.Core
             return false;
         }
 
-        public bool CheckMonster(int i, int j) 
+        public bool CheckMonster(int i, int j) //Used to check if there is a monster in the space the player is trying to move to
         {
             if (MazeArray[i, j].GetType() == Monster.GetType()) 
             {
@@ -164,7 +165,7 @@ namespace AdventureGame.Core
             return false;
         }
 
-        public bool CheckPotion(int i, int j)
+        public bool CheckPotion(int i, int j) //Used to check if there is a potion in the space the player is trying to move to
         {
             if (MazeArray[i, j] == "P")
             {
@@ -173,7 +174,7 @@ namespace AdventureGame.Core
             return false;
         }
 
-        public bool CheckExit(int i, int j)
+        public bool CheckExit(int i, int j) //Used to check if there is a exit in the space the player is trying to move to
         {
             if (MazeArray[i, j] == "E")
             {
@@ -182,32 +183,52 @@ namespace AdventureGame.Core
             return false;
         }
 
-        public int CheckPlayerHealth()
+        public int CheckPlayerHealth() //Used to always get the players health so it can be printed to the console
         {
             return Player.Health;
         }
-        public void CheckConditions(int i, int j)
+        public void CheckConditions(int i, int j) //Used to check all of the conditions for certain actions to happen and uses the Check methods right before this
         {
-            if (CheckWeapon(i, j))
+            if (CheckWeapon(i, j)) // Checks to see if weapon was true and if is does logic for picking up weapon and changing damage
             {
                 Console.WriteLine(Weapon.PickupMessage(((Weapon)MazeArray[i, j]).NameOfWeapon, ((Weapon)MazeArray[i, j]).Damage));
-                Console.ReadLine();
                 Player.Inventory.Add((Weapon)MazeArray[i, j]);
-                Player.DamageChange(((Weapon)MazeArray[i, j]).Damage);
+                if (((Weapon)MazeArray[i, j]).Damage > Player.Damage)
+                {
+                    Player.DamageChange(((Weapon)MazeArray[i, j]).Damage);
+                    Console.WriteLine($"Your damage has increased to {Player.Damage}!");
+                    Console.ReadLine();
+                }
+                else 
+                {
+                    Console.WriteLine("Your current weapon is better or the same as this one, so you put the picked up weapon in your inventory.");
+                    Console.ReadLine();
+                }
             }
-            else if (CheckMonster(i, j))
+            else if (CheckMonster(i, j)) //Checks to see if monster was true and if it is does logic for combat 
             {
                 //Logic for combat goes here
                 Console.WriteLine("You encountered a monster!");
                 Console.ReadLine();
                 Monster = (Monster)MazeArray[i, j];
-                
+                Console.WriteLine($"Monster Health: {Monster.Health}");
+
                 while (Player.Health > 0 && Monster.Health > 0) 
                 {
+                    Player.Attack(Player.Damage, Monster);
+                    if (Monster.Health < 0)
+                    {
+                        Console.WriteLine("You defeated the monster!");
+                        Console.ReadLine();
+                        break;
+                    }
+                    Console.WriteLine($"Your Turn: ");
+                    Console.WriteLine($"You deal: {Player.Damage}");
                     Console.WriteLine($"Monster Health: {Monster.Health}");
                     Console.ReadLine();
-                    Player.Attack(Player.Damage, Monster);
                     Monster.Attack(Monster.Damage, Player);
+                    Console.WriteLine($"Monsters Turn: ");
+                    Console.WriteLine($"The monster deals: {Monster.Damage}");
                     Console.WriteLine($"Your health: {Player.Health}");
                     Console.ReadLine();
                     if (Player.Health <= 0)
@@ -217,21 +238,15 @@ namespace AdventureGame.Core
                         Alive = false;
                         break;
                     }
-                    else if (Monster.Health <= 0)
-                    {
-                        Console.WriteLine("You defeated the monster!");
-                        Console.ReadLine();
-                        break;
-                    }
                 }
             }
-            else if (CheckPotion(i, j)) 
+            else if (CheckPotion(i, j)) //Checks to see if potion was true and if it is it does logic for healing the player
             {
                 Console.WriteLine(Potion.PickupMessage("Potion", 20));
                 Console.ReadLine();
                 Player.HealthUp(Potion.Heal);
             }
-            else if (CheckExit(i, j))
+            else if (CheckExit(i, j)) //Checks to see if the exit was true and if it is it does logic for winning the game
             {
                 Console.WriteLine("You found the exit! You win!");
                 Console.ReadLine();
@@ -240,9 +255,9 @@ namespace AdventureGame.Core
                 //Logic for winning the game goes here
             }
         }
-        public void MovePlayer(ConsoleKeyInfo x)
+        public void MovePlayer(ConsoleKeyInfo x) //Does all logic for moving the player 
         {
-            if (x.Key == ConsoleKey.D || x.Key == ConsoleKey.RightArrow)
+            if (x.Key == ConsoleKey.D || x.Key == ConsoleKey.RightArrow) //If D or RightArrow is pressed checks for walls and changes the location of player and the spot the player left to a blank space
             {
                 for (int i = 0; i < MazeArray.GetLength(0); i++)
                 {
@@ -253,6 +268,7 @@ namespace AdventureGame.Core
                             if (MazeArray[i, j + 1] == "#")
                             {
                                 Console.WriteLine("You hit a wall!");
+                                Console.ReadLine();
                                 continue;
                             }
                             else
@@ -266,7 +282,7 @@ namespace AdventureGame.Core
                     }
                 }
             }
-            else if (x.Key == ConsoleKey.A || x.Key == ConsoleKey.LeftArrow)
+            else if (x.Key == ConsoleKey.A || x.Key == ConsoleKey.LeftArrow) //If A or LeftArrow is pressed checks for walls and changes the location of player and the spot the player left to a blank spac
             {
                 for (int i = 0; i < MazeArray.GetLength(0); i++)
                 {
@@ -277,6 +293,7 @@ namespace AdventureGame.Core
                             if (MazeArray[i, j - 1] == "#")
                             {
                                 Console.WriteLine("You hit a wall!");
+                                Console.ReadLine();
                                 continue;
                             }
                             else
@@ -291,7 +308,7 @@ namespace AdventureGame.Core
                     }
                 }
             }
-            else if (x.Key == ConsoleKey.S || x.Key == ConsoleKey.DownArrow)
+            else if (x.Key == ConsoleKey.S || x.Key == ConsoleKey.DownArrow) //If S or DownArrow is pressed checks for walls and changes the location of player and the spot the player left to a blank spac
             {
                 for (int i = 0; i < MazeArray.GetLength(0); i++)
                 {
@@ -302,6 +319,7 @@ namespace AdventureGame.Core
                             if (MazeArray[i + 1, j] == "#")
                             {
                                 Console.WriteLine("You hit a wall!");
+                                Console.ReadLine();
                                 continue;
                             }
                             else
@@ -316,7 +334,7 @@ namespace AdventureGame.Core
                     }
                 }
             }
-            else if (x.Key == ConsoleKey.W || x.Key == ConsoleKey.UpArrow)
+            else if (x.Key == ConsoleKey.W || x.Key == ConsoleKey.UpArrow) //If W or UpArrow is pressed checks for walls and changes the location of player and the spot the player left to a blank spac
             {
                 for (int i = 0; i < MazeArray.GetLength(0); i++)
                 {
@@ -327,6 +345,7 @@ namespace AdventureGame.Core
                             if (MazeArray[i - 1, j] == "#")
                             {
                                 Console.WriteLine("You hit a wall!");
+                                Console.ReadLine();
                                 continue;
                             }
                             else

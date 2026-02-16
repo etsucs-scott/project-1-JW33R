@@ -3,7 +3,7 @@ namespace AdventureGame.Cli
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] args) //Entry point for the game and prints all the info to the console
         {
             Maze maze = new();
             Player player = new();

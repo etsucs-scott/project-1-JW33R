@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdventureGame.Core
 {
-    public class Player : ICharacter
+    public class Player : ICharacter //Class used for the player which tracks health, damage, and inventory and takes in methods from ICharacter
     {
 
         public List<object> Inventory { get; private set; }
