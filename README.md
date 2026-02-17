@@ -14,7 +14,7 @@ S - Down
 D - Right
 -------------------
 @ - Player(You control and move this player)
-# - Wall(Can't go past walls)
+"#" - Wall(Can't go past walls)
 M - Monster(When encountered, you will engage in a turn based system until either one of you defeated)
 P - Potion(Upon pickup heal +20)
 W - Weapon(Upon pickup gain a damage boost depending on already equipped weapon)
