@@ -183,10 +183,19 @@ namespace AdventureGame.Core
             return false;
         }
 
+        /// <summary>
+        /// Returns the player's current health.
+        /// </summary>
+        /// <returns>The player's current health</returns>
         public int CheckPlayerHealth() //Used to always get the players health so it can be printed to the console
         {
             return Player.Health;
         }
+           /// <summary>
+           /// Takes in a spot on the array and checks for all of the conditions used for checking to see if there is an object
+           /// </summary>
+           /// <param name="i"></param>
+           /// <param name="j"></param>
         public void CheckConditions(int i, int j) //Used to check all of the conditions for certain actions to happen and uses the Check methods right before this
         {
             if (CheckWeapon(i, j)) // Checks to see if weapon was true and if is does logic for picking up weapon and changing damage
@@ -263,18 +272,17 @@ namespace AdventureGame.Core
                     {
                         if (MazeArray[i, j] == "@")
                         {
-                            if (MazeArray[i, j + 1] == "#")
-                            {
-                                Console.WriteLine("You hit a wall!");
-                                Console.ReadLine();
-                                continue;
-                            }
-                            else
+                            if (j + 2 < MazeArray.GetLength(0))
                             {
                                 CheckConditions(i, j + 1);
                                 MazeArray[i, j] = ".";
                                 j += 1;
                                 MazeArray[i, j] = "@";
+                            }
+                            else
+                            {
+                                Console.WriteLine("You hit a wall!");
+                                Console.ReadLine();
                             }
                         }
                     }
@@ -288,11 +296,11 @@ namespace AdventureGame.Core
                     {
                         if (MazeArray[i, j] == "@")
                         {
-                            if (MazeArray[i, j - 1] == "#")
+                            if (j == 1)
                             {
                                 Console.WriteLine("You hit a wall!");
                                 Console.ReadLine();
-                                continue;
+                               
                             }
                             else
                             {
@@ -314,18 +322,18 @@ namespace AdventureGame.Core
                     {
                         if (MazeArray[i, j] == "@")
                         {
-                            if (MazeArray[i + 1, j] == "#")
-                            {
-                                Console.WriteLine("You hit a wall!");
-                                Console.ReadLine();
-                                continue;
-                            }
-                            else
+                            if (i + 2 < MazeArray.GetLength(0))
                             {
                                 CheckConditions(i + 1, j);
                                 MazeArray[i, j] = ".";
                                 i += 1;
                                 MazeArray[i, j] = "@";
+                                
+                            }
+                            else
+                            {
+                                Console.WriteLine("You hit a wall!");
+                                Console.ReadLine();
                             }
                            
                         }
@@ -340,11 +348,10 @@ namespace AdventureGame.Core
                     {
                         if (MazeArray[i, j] == "@")
                         {
-                            if (MazeArray[i - 1, j] == "#")
+                            if (i == 1)
                             {
                                 Console.WriteLine("You hit a wall!");
                                 Console.ReadLine();
-                                continue;
                             }
                             else
                             {
